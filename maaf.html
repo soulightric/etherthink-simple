@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permintaan Maaf - Fikri</title>
+    
+    <!-- Open Graph untuk WhatsApp -->
+    <meta property="og:title" content="Permintaan Maaf dari Fikri">
+    <meta property="og:description" content="Aku mohon maaf yang sebesar-besarnya... Maafin aku ya? 🥺">
+    <meta property="og:image" content="https://yourdomain.com/images/maaf-mono.jpg"> <!-- GANTI LINK GAMBAR -->
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/maaf.html">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card {
+            background: #ffffff;
+            max-width: 460px;
+            width: 100%;
+            margin: 40px auto;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            color: #1a1a1a;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            background: #1a1a1a;
+            padding: 55px 30px 45px;
+            color: white;
+        }
+
+        .flower {
+            font-size: 88px;
+            animation: sway 3s infinite ease-in-out;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            opacity: 0.85;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            padding: 45px 40px 55px;
+        }
+
+        .message {
+            font-size: 18.5px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            font-size: 17.5px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .btn-mau {
+            background: #1a1a1a;
+            color: white;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-mau:hover {
+            background: #333;
+            transform: scale(1.05);
+        }
+
+        .btn-gamau {
+            background: #f0f0f0;
+            color: #1a1a1a;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            font-weight: 500;
+            position: absolute;
+            z-index: 20;
+            transition: all 0.2s linear;
+        }
+
+        .name {
+            margin-top: 35px;
+            font-size: 23px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        /* Halaman Yeay */
+        .yeay-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #1a1a1a;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .yeay-page .big-flower {
+            font-size: 130px;
+            margin-bottom: 25px;
+            animation: pop 0.8s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.3); }
+            60% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Halaman Permintaan Maaf -->
+    <div class="card" id="maaf-page">
+        <div class="header">
+            <div class="flower">🌸</div>
+            <h1 class="title">Maaf yaa Ratuuu</h1>
+            <p class="subtitle">Dari logicku yang jalan</p>
+        </div>
+
+        <div class="content">
+            <p class="message">
+                yaa gak tau sih salahnya apa, tapi maaf dehh, intinya gitu dehh<br>
+                <strong>Maaf yaa?</strong>
+            </p>
+
+            <div class="buttons">
+                <button class="btn btn-mau" onclick="terimaMaaf()">Mau</button>
+                <button class="btn btn-gamau" id="gamauBtn">Gamau</button>
+            </div>
+
+            <div class="name">— Cujud —</div>
+        </div>
+    </div>
+
+    <!-- Halaman Yeay -->
+    <div class="yeay-page" id="yeay-page">
+        <div class="big-flower">🌸</div>
+        <h1 style="font-size: 52px; font-family: 'Playfair Display', serif;">Yeayyy!</h1>
+        <p style="font-size: 22px; margin-top: 20px; max-width: 320px;">
+            makasih hehe.<br>
+        </p>
+        <p style="margin-top: 50px; font-size: 15px; opacity: 0.7;">
+            Dibuat dadakan 
+        </p>
+    </div>
+
+    <script>
+        const gamauBtn = document.getElementById('gamauBtn');
+        const maafPage = document.getElementById('maaf-page');
+        const yeayPage = document.getElementById('yeay-page');
+
+        function terimaMaaf() {
+            maafPage.style.display = 'none';
+            yeayPage.style.display = 'flex';
+        }
+
+        // Fungsi memindahkan tombol Gamau secara acak di seluruh layar
+        function gerakkanTombol() {
+            const btnWidth = gamauBtn.offsetWidth;
+            const btnHeight = gamauBtn.offsetHeight;
+
+            // Hitung area layar yang aman
+            const maxX = window.innerWidth - btnWidth - 40;
+            const maxY = window.innerHeight - btnHeight - 100;
+
+            let newX = Math.random() * maxX;
+            let newY = Math.random() * maxY;
+
+            // Tambahkan variasi agar terasa lebih "nakal"
+            newX += (Math.random() - 0.5) * 120;
+            newY += (Math.random() - 0.5) * 100;
+
+            newX = Math.max(30, Math.min(newX, maxX));
+            newY = Math.max(30, Math.min(newY, maxY));
+
+            gamauBtn.style.left = `${newX}px`;
+            gamauBtn.style.top = `${newY}px`;
+            gamauBtn.style.transform = `scale(0.82)`;
+
+            setTimeout(() => {
+                gamauBtn.style.transform = `scale(1)`;
+            }, 180);
+        }
+
+        // Event listeners
+        gamauBtn.addEventListener('mouseenter', gerakkanTombol);
+        gamauBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            gerakkanTombol();
+        });
+
+        // Untuk layar sentuh (HP)
+        gamauBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            gerakkanTombol();
+        });
+
+        // Inisialisasi posisi awal tombol Gamau
+        window.addEventListener('load', () => {
+            gamauBtn.style.position = 'fixed';   // fixed agar bisa bergerak di seluruh layar
+            setTimeout(() => {
+                gerakkanTombol();
+            }, 800);
+        });
+
+        // Bonus: gerak otomatis ringan setiap beberapa detik
+        setInterval(() => {
+            if (Math.random() > 0.65 && maafPage.style.display !== 'none') {
+                gerakkanTombol();
+            }
+        }, 2800);
+    </script>
+</body>
+</html>
