@@ -1,424 +1,188 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etherthink — Until Frontier</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="Etherthink.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etherthink</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #080b10;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+  }
+  canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+  .center {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    user-select: none;
+    padding: 0 2rem;
+  }
+  .brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(4rem, 12vw, 10rem);
+    letter-spacing: 0.08em;
+    color: #00ffaa;
+    line-height: 1;
+  }
+  .tagline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(0.65rem, 1.8vw, 0.95rem);
+    letter-spacing: 0.5em;
+    color: #f7f7f0;
+    margin-top: 1rem;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .center {
+      padding: 0 1rem;
+    }
+    .brand {
+      font-size: clamp(2rem, 15vw, 8rem);
+      letter-spacing: 0.06em;
+    }
+    .tagline {
+      font-size: clamp(0.6rem, 2.5vw, 0.85rem);
+      letter-spacing: 0.4em;
+      margin-top: 0.8rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .center {
+      padding: 0 0.5rem;
+    }
+    .brand {
+      letter-spacing: 0.04em;
+    }
+    .tagline {
+      font-size: clamp(0.55rem, 3vw, 0.75rem);
+      letter-spacing: 0.3em;
+      margin-top: 0.6rem;
+    }
+  }
+</style>
 </head>
 <body>
-    <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
+<canvas id="c"></canvas>
+<div class="center">
+  <div class="brand">Etherthink</div>
+  <div class="tagline">Slowly but surely</div>
+</div>
 
-    <!-- NAV -->
-    <nav>
-    <a href="#" class="nav-logo">
-        <img src="etherthink.png" alt="Etherthink Logo" class="logo-img">
-    </a>
-    <ul class="nav-links">
-        <li><a href="#about">Tentang</a></li>
-        <li><a href="#courses">Konten</a></li>
-        <li><a href="#youtube">YouTube</a></li>
-        <li><a href="https://cujud.xyz">Atmin's site</a></li>
-    </ul>
-    <a href="https://youtube.com/@Etherthink" target="_blank" class="nav-cta">Subscribe →</a>
-    </nav>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
 
-    <!-- HERO -->
-    <section class="hero">
-    <div class="hero-orb orb-1"></div>
-    <div class="hero-orb orb-2"></div>
+const SYMBOLS = [
+  '∫','∑','π','√','∞','Δ','∇','∂','λ','μ','σ','ω','α','β','γ','θ','φ','ψ','ε','η',
+  'ℏ','ℓ','∈','⊕','⊗','≡','≈','≠','≤','≥','∝','∀','∃',
+  'F=ma','E=mc²','PV=nRT','v=λf','a²+b²=c²','eⁱᵖ+1=0',
+  'ΔS≥0','∇·E=ρ/ε₀','τ=rF','p=mv','KE=½mv²',
+  'H₂O','CO₂','NH₃','NaCl','C₆H₁₂O₆','Fe₂O₃',
+  'sin²+cos²=1','lim','dx','dy','∮',
+  'σ=F/A','Q=mcΔT','η=W/Q','Ĥψ=Eψ','Δx·Δp≥ℏ/2',
+  'R','Ω','Hz','Pa','J/mol','⊻','∧','∨','¬','ℝ','ℤ','ℕ','ℂ',
+];
 
-    <div class="hero-content">
-        <div class="hero-eyebrow">
-        <span class="eyebrow-line"></span>
-        <span>Just watch in</span>
-        <div class="yt-badge"><span class="yt-dot"></span> YouTube</div>
-        <span class="eyebrow-line right"></span>
-        </div>
+let W, H, particles = [];
 
-        <h1 class="hero-title">
-        <span class="title-line-1">ETHERTHINK</span>
-        <span class="title-line-2">UNTIL FRONTIER</span>
-        </h1>
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); init(); });
 
-        <p class="hero-sub">
-        Etherthink adalah channel youtube yang membahas hal seputar topik yang in the box hingga out of the box.
-        </p>
+function rand(a, b) { return a + Math.random() * (b - a); }
 
-        <div class="hero-actions">
-        <a href="https://youtube.com" target="_blank" class="btn-primary">
-            <span>▶</span> Tonton di YouTube
-        </a>
-        <a href="#courses" class="btn-ghost">
-            Lihat Konten ↓
-        </a>
-        </div>
+class Particle {
+  constructor() {
+    this.sym   = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    this.x     = rand(20, W - 20);
+    this.y     = rand(20, H - 20);
+    this.vx    = rand(-0.5, 0.5);
+    this.vy    = rand(-0.5, 0.5);
+    this.size  = rand(11, 19);
+    this.hue   = rand(180, 240);
+    this.alpha = rand(0.15, 0.35);
+    this.w     = this.sym.length * this.size * 0.6;
+  }
 
-        <div class="hero-stats">
-        <div class="stat-item">
-            <span class="stat-num">10K+</span>
-            <span class="stat-label">Subscriber</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-num">30+</span>
-            <span class="stat-label">Video</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-num">4.9★</span>
-            <span class="stat-label">Rating</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-num">3+</span>
-            <span class="stat-label">Topik</span>
-        </div>
-        </div>
-    </div>
-    </section>
+  update(others) {
+    this.x += this.vx;
+    this.y += this.vy;
 
-    <!-- TICKER -->
-    <div class="ticker-wrap">
-    <div class="ticker-track" id="ticker">
-        <div class="ticker-item"><span>Critical Thinking</span> <span class="ticker-sep">◆</span> Take Note <span class="ticker-sep">◆</span> <span>Beveragesly</span> <span class="ticker-sep">◆</span> Snacksly <span class="ticker-sep">◆</span> <span>Karbitsly</span> <span class="ticker-sep">◆</span> Gamesly <span class="ticker-sep">◆</span> <span>Learningsly</span> <span class="ticker-sep">◆</span> Gugu Gaga <span class="ticker-sep">◆</span> <span>Bahasa Bayi</span> <span class="ticker-sep">◆</span></div>
-        <div class="ticker-item"><span>Critical Thinking</span> <span class="ticker-sep">◆</span> Take Note <span class="ticker-sep">◆</span> <span>Beveragesly</span> <span class="ticker-sep">◆</span> Snacksly <span class="ticker-sep">◆</span> <span>Karbitsly</span> <span class="ticker-sep">◆</span> Gamesly <span class="ticker-sep">◆</span> <span>Learningsly</span> <span class="ticker-sep">◆</span> Gugu Gaga <span class="ticker-sep">◆</span> <span>Bahasa Bayi</span> <span class="ticker-sep">◆</span></div>
-    </div>
-    </div>
+    if (this.x < 0)  { this.x = 0;  this.vx *= -1; }
+    if (this.x > W)  { this.x = W;  this.vx *= -1; }
+    if (this.y < 0)  { this.y = 0;  this.vy *= -1; }
+    if (this.y > H)  { this.y = H;  this.vy *= -1; }
 
-    <!-- ABOUT -->
-    <section class="about" id="about">
-    <div class="about-grid reveal">
-        <div class="about-visual">
-        <div class="about-hexagon">
-            <div class="hex-ring"></div>
-            <div class="hex-ring"></div>
-            <div class="hex-ring"></div>
-            <div class="hex-core">
-            <img src="etherthink.png" alt="Etherthink Logo" class="hex-logo">
-            <span class="hex-label">Etherthink</span>
-            </div>
-        </div>
-        </div>
-        <div class="about-text">
-        <div class="section-header">
-            <div class="section-tag"><span class="tag-dash"></span>Tentang Kami</div>
-            <h2 class="section-title">Belajar Adalah<br>Koentji</h2>
-        </div>
-        <p>
-            <strong>Etherthink</strong> bukan sekadar channel YouTube biasa. Kami adalah gerakan pendidikan yang percaya bahwa setiap orang berhak mendapatkan akses ke pengetahuan berkualitas tinggi.
-        </p>
-        <p>
-            Kami menyajikan konten yang <strong>mendalam, terstruktur, dan menantang cara berpikirmu</strong> — dari sains hingga filsafat, dari matematika hingga psikologi kognitif.
-        </p>
-        <div class="about-features">
-            <div class="feature-row">
-            <div class="feature-icon">🧠</div>
-            <span class="feature-text">Konten berbasis riset</span>
-            </div>
-            <div class="feature-row">
-            <div class="feature-icon">⚡</div>
-            <span class="feature-text">Penjelasan kompleks dengan cara sederhana</span>
-            </div>
-            <div class="feature-row">
-            <div class="feature-icon">🔬</div>
-            <span class="feature-text">Disampaikan oleh adminnnya sendiri</span>
-            </div>
-            <div class="feature-row">
-            <div class="feature-icon">🌐</div>
-            <span class="feature-text">100% gratis dan dapat diakses siapa saja</span>
-            </div>
-        </div>
-        </div>
-    </div>
-    </section>
-
-    <!-- COURSES -->
-    <section class="courses" id="courses">
-    <div class="courses-inner">
-        <div class="section-header reveal">
-        <div class="section-tag"><span class="tag-dash"></span>Topik Unggulan</div>
-        <h2 class="section-title">Apa yang Akan Kamu<br>Pelajari</h2>
-        </div>
-        <div class="courses-grid reveal">
-        <div class="course-card featured">
-            <div class="course-num">// 001</div>
-            <div class="course-badge">🔥 Populer</div>
-            <h3 class="course-title">Beveragesly</h3>
-            <p class="course-desc">Membahas minuman cup ataupun botolan dengan cara yang fun untuk di tonton.</p>
-            <div class="course-meta"><span>10+ Video</span> · <span>Beveragesly</span></div>
-        </div>
-        <div class="course-card">
-            <div class="course-num">// 002</div>
-            <div class="course-badge">💡 Trending</div>
-            <h3 class="course-title">Snacksly</h3>
-            <p class="course-desc">Membahas snack ringan mulai dari yang bungkusan plastic, hingga bungkusan yang bisa di makan (kalau ada).</p>
-            <div class="course-meta"><span>2+ Video</span> · <span>Snacksly</span></div>
-        </div>
-        <div class="course-card">
-            <div class="course-num">// 003</div>
-            <div class="course-badge">⚛️ Baru</div>
-            <h3 class="course-title">Karbitsly</h3>
-            <p class="course-desc">Menjelajahi dunia anime yang bisa kita bahas, mulai dari segi karakter maupun jalan ceritanya..</p>
-            <div class="course-meta"><span>To Be Determined</span> · <span>Karbitsly</span></div>
-        </div>
-    </div>
-    </section>
-
-    <!-- PROCESS -->
-    <!-- <section class="process" id="process">
-    <div class="process-inner">
-        <div class="section-header reveal" style="text-align:center; max-width: 600px; margin: 0 auto 70px;">
-        <div class="section-tag" style="justify-content:center;"><span class="tag-dash"></span>Cara Belajar<span class="tag-dash" style="transform:scaleX(-1)"></span></div>
-        <h2 class="section-title">Sistem Belajar<br>Kami Berbeda</h2>
-        </div>
-        <div class="process-steps reveal">
-        <div class="step">
-            <div class="step-num">// STEP 01</div>
-            <div class="step-icon-wrap">🎯</div>
-            <h3 class="step-title">Pilih Topik</h3>
-            <p class="step-desc">Mulai dari topik yang paling membuatmu penasaran. Ikuti rasa ingin tahumu.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">// STEP 02</div>
-            <div class="step-icon-wrap">📺</div>
-            <h3 class="step-title">Tonton Video</h3>
-            <p class="step-desc">Nikmati penjelasan mendalam yang disajikan secara visual dan interaktif di YouTube.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">// STEP 03</div>
-            <div class="step-icon-wrap">🔄</div>
-            <h3 class="step-title">Hubungkan Ide</h3>
-            <p class="step-desc">Temukan koneksi antar konsep. Otak kamu akan membangun jaringan pengetahuan yang lebih kuat.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">// STEP 04</div>
-            <div class="step-icon-wrap">🚀</div>
-            <h3 class="step-title">Terapkan & Bagikan</h3>
-            <p class="step-desc">Gunakan pola pikir barumu dalam kehidupan nyata dan sebarkan ke komunitasmu.</p>
-        </div>
-        </div>
-    </div>
-    </section> -->
-
-    <!-- YOUTUBE -->
-    <section class="youtube" id="youtube">
-    <div class="youtube-inner">
-        <div class="yt-showcase reveal">
-        <div class="yt-player-mock">
-            <div class="yt-grid-lines"></div>
-            <div class="yt-play-btn">
-            <div class="play-circle">
-                <div class="play-triangle"></div>
-            </div>
-            <span class="yt-label">Tonton Sekarang</span>
-            </div>
-            <div class="yt-bar">
-            <div class="yt-progress"><div class="yt-progress-fill"></div></div>
-            <span class="yt-time">5:47 / 8:22</span>
-            </div>
-        </div>
-
-        <div class="yt-info">
-            <div class="section-tag"><span class="tag-dash"></span>YouTube Channel</div>
-            <div class="yt-sub-count">10K+</div>
-            <div class="yt-sub-label">Subscriber & Terus Bertambah</div>
-            <div class="yt-features">
-            <div class="yt-feat">Video baru setiap minggu</div>
-            <div class="yt-feat">Durasi mendalam 8 - 12 menit</div>
-            <div class="yt-feat">Subtitle bahasa Indonesia</div>
-            <div class="yt-feat">Gratis untuk semua</div>
-            <div class="yt-feat">Komunitas aktif di kolom komentar</div>
-            </div>
-            <a href="https://youtube.com/@Etherthink" target="_blank" class="btn-primary" style="display:inline-flex; text-decoration:none;">
-            <span style="color:#ff4050; font-size:1.1rem">▶</span> Kunjungi Channel
-            </a>
-        </div>
-        </div>
-    </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <!-- <section class="testimonials">
-    <div class="testimonials-inner">
-        <div class="section-header reveal" style="text-align:center; max-width:600px; margin:0 auto 70px">
-        <div class="section-tag" style="justify-content:center"><span class="tag-dash"></span>Apa Kata Mereka</div>
-        <h2 class="section-title">Penonton Kami<br>Berbicara</h2>
-        </div>
-        <div class="testimonials-grid reveal">
-        <div class="testi-card">
-            <div class="testi-quote">"</div>
-            <p class="testi-text">Etherthink bener-bener ngubah cara aku mikir. Sekarang aku lebih kritis dan nggak gampang percaya informasi tanpa bukti. Kontennya padat tapi gampang dicerna!</p>
-            <div class="testi-author">
-            <div class="testi-avatar">AR</div>
-            <div>
-                <div class="testi-name">Arya Ramadhan</div>
-                <div class="testi-role">Mahasiswa Teknik, Bandung</div>
-            </div>
-            </div>
-        </div>
-        <div class="testi-card">
-            <div class="testi-quote">"</div>
-            <p class="testi-text">Baru nemuin channel ini 3 bulan lalu dan udah nonton hampir semua videonya. Kualitas kontennya setara sama video-video edukasi internasional, tapi pakai bahasa kita sendiri.</p>
-            <div class="testi-author">
-            <div class="testi-avatar">SN</div>
-            <div>
-                <div class="testi-name">Sinta Nuraini</div>
-                <div class="testi-role">Guru SMA, Yogyakarta</div>
-            </div>
-            </div>
-        </div>
-        <div class="testi-card">
-            <div class="testi-quote">"</div>
-            <p class="testi-text">Sebagai orang yang kerja di riset, aku sangat menghargai cara Etherthink menyampaikan konsep ilmiah yang akurat tanpa oversimplifikasi. Luar biasa!</p>
-            <div class="testi-author">
-            <div class="testi-avatar">DW</div>
-            <div>
-                <div class="testi-name">Dr. Dimas Wibowo</div>
-                <div class="testi-role">Peneliti, Jakarta</div>
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>
-    </section> -->
-
-    <!-- CTA -->
-    <section class="cta-section">
-    <div class="cta-inner reveal">
-        <div class="section-tag" style="justify-content:center; margin-bottom:30px"><span class="tag-dash"></span>Bergabung Sekarang</div>
-        <h2 class="cta-title">Siap Menjadi<br><span class="highlight">Pemikir Masa Depan?</span></h2>
-        <p class="cta-sub">Subscribe ke channel Etherthink dan jadilah bagian dari komunitas yang haus akan pengetahuan. Konten baru setiap minggu, gratis selamanya.</p>
-        <div class="cta-actions">
-        <a href="https://youtube.com" target="_blank" class="btn-primary">
-            <span style="color:#ff4050">▶</span> Subscribe Gratis
-        </a>
-        <a href="#about" class="btn-ghost">Pelajari Lebih →</a>
-        </div>
-    </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-    <div class="footer-grid">
-        <div class="footer-brand">
-        <a href="#" class="nav-logo">
-            <div class="logo-mark"></div>
-            Etherthink
-        </a>
-        <p class="footer-desc">Platform edukasi digital yang percaya bahwa pengetahuan berkualitas tinggi harus bisa diakses oleh semua orang, tanpa terkecuali.</p>
-        </div>
-        <div class="footer-col">
-        <h4>Konten</h4>
-        <ul>
-            <li><a href="#">Beveragesly</a></li>
-            <li><a href="#">Snacksly</a></li>
-            <li><a href="#">Karbitsly</a></li>
-            <li><a href="#">Learningsly</a></li>
-        </ul>
-        </div>
-        <div class="footer-col">
-        <h4>Tentang</h4>
-        <ul>
-            <li><a href="#">Visi & Misi</a></li>
-            <li><a href="#">Tim Kami</a></li>
-            <li><a href="#">Kolaborasi</a></li>
-            <li><a href="#">Press Kit</a></li>
-        </ul>
-        </div>
-        <div class="footer-col">
-        <h4>Terhubung</h4>
-        <ul>
-            <li><a href="https://youtube.com/@Etherthink" target="_blank">YouTube</a></li>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">Twitter / X</a></li>
-            <li><a href="#">Komunitas</a></li>
-        </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <span>© 2024 - 2026 Etherthink. Semua Hak Dilindungi <a href="https://cujud.xyz">Cujud.</a></span>
-        <div class="status-dot">
-        <div class="dot"></div>
-        <span>Semua Sistem Aktif</span>
-        </div>
-        <span>Dibuat dengan 🧠 untuk Indonesia</span>
-    </div>
-    </footer>
-
-    <script>
-    // CURSOR
-    const dot = document.getElementById('cursorDot');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-
-    document.addEventListener('mousemove', e => {
-        mx = e.clientX; my = e.clientY;
-        dot.style.left = mx + 'px';
-        dot.style.top = my + 'px';
-    });
-
-    function animRing() {
-        rx += (mx - rx) * 0.12;
-        ry += (my - ry) * 0.12;
-        ring.style.left = rx + 'px';
-        ring.style.top = ry + 'px';
-        requestAnimationFrame(animRing);
+    for (const o of others) {
+      if (o === this) continue;
+      const dx = this.x - o.x;
+      const dy = this.y - o.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const minDist = (this.w + o.w) * 0.5;
+      if (dist < minDist && dist > 0) {
+        const nx = dx / dist;
+        const ny = dy / dist;
+        const dvx = this.vx - o.vx;
+        const dvy = this.vy - o.vy;
+        const dot = dvx * nx + dvy * ny;
+        if (dot < 0) {
+          this.vx -= dot * nx;
+          this.vy -= dot * ny;
+          o.vx    += dot * nx;
+          o.vy    += dot * ny;
+          const overlap = (minDist - dist) / 2;
+          this.x += nx * overlap;
+          this.y += ny * overlap;
+          o.x    -= nx * overlap;
+          o.y    -= ny * overlap;
+        }
+      }
     }
-    animRing();
+  }
 
-    document.querySelectorAll('a, button, .course-card, .testi-card, .step, .feature-row, .play-circle').forEach(el => {
-        el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
-        el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
-    });
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.font        = `${this.size}px 'Inter', monospace`;
+    ctx.fillStyle   = `hsl(${this.hue}, 55%, 70%)`;
+    ctx.fillText(this.sym, this.x, this.y);
+    ctx.restore();
+  }
+}
 
-    // SCROLL REVEAL
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-            entry.target.style.transitionDelay = (i * 0.1) + 's';
-            entry.target.classList.add('visible');
-        }
-        });
-    }, { threshold: 0.1 });
+function init() {
+  particles = [];
+  for (let i = 0; i < 90; i++) particles.push(new Particle());
+}
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  for (const p of particles) p.update(particles);
+  for (const p of particles) p.draw();
+  requestAnimationFrame(loop);
+}
 
-    // COUNTER ANIMATION
-    function animateCounter(el, target, duration = 2000) {
-        let start = 0;1
-        const step = timestamp => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const val = Math.floor(progress * target);
-        el.textContent = val.toLocaleString() + (el.dataset.suffix || '');
-        if (progress < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-    }
-
-    // TICKER DUPLICATE for seamless loop (already in HTML)
-
-    // SMOOTH NAV
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', e => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        });
-    });
-
-    // NAV scroll effect
-    window.addEventListener('scroll', () => {
-        const nav = document.querySelector('nav');
-        if (window.scrollY > 60) {
-        nav.style.background = 'rgba(2,13,10,0.97)';
-        } else {
-        nav.style.background = 'linear-gradient(180deg, rgba(2,13,10,0.95) 0%, transparent 100%)';
-        }
-    });
-    </script>
+init();
+loop();
+</script>
 </body>
 </html>
