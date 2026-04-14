@@ -1,189 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Etherthink</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;700&display=swap" rel="stylesheet">
-<link rel="shortcut icon" href="/assets/img/Etherthink.ico" type="image/x-icon">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #080b10;
-    width: 100vw; height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Inter', sans-serif;
-  }
-  canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-  }
-  .center {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-    user-select: none;
-    padding: 0 2rem;
-  }
-  .brand {
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: clamp(4rem, 12vw, 10rem);
-    letter-spacing: 0.08em;
-    color: #00ffaa;
-    line-height: 1;
-  }
-  .tagline {
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: clamp(0.65rem, 1.8vw, 0.95rem);
-    letter-spacing: 0.5em;
-    color: #f7f7f0;
-    margin-top: 1rem;
-    text-transform: uppercase;
-  }
-
-  @media (max-width: 768px) {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etherthink</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/public/Etherthink.ico" type="image/x-icon">
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #080b10;
+        width: 100vw; height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+    }
+    canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+    }
     .center {
-      padding: 0 1rem;
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        user-select: none;
+        padding: 0 2rem;
     }
     .brand {
-      font-size: clamp(2rem, 15vw, 8rem);
-      letter-spacing: 0.06em;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: clamp(4rem, 12vw, 10rem);
+        letter-spacing: 0.08em;
+        color: #00ffaa;
+        line-height: 1;
     }
     .tagline {
-      font-size: clamp(0.6rem, 2.5vw, 0.85rem);
-      letter-spacing: 0.4em;
-      margin-top: 0.8rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: clamp(0.65rem, 1.8vw, 0.95rem);
+        letter-spacing: 0.5em;
+        color: #f7f7f0;
+        margin-top: 1rem;
+        text-transform: uppercase;
     }
-  }
-
-  @media (max-width: 480px) {
-    .center {
-      padding: 0 0.5rem;
+    @media (max-width: 768px) {
+        .center {
+        padding: 0 1rem;
+        }
+        .brand {
+        font-size: clamp(2rem, 15vw, 8rem);
+        letter-spacing: 0.06em;
+        }
+        .tagline {
+        font-size: clamp(0.6rem, 2.5vw, 0.85rem);
+        letter-spacing: 0.4em;
+        margin-top: 0.8rem;
+        }
     }
-    .brand {
-      letter-spacing: 0.04em;
+    @media (max-width: 480px) {
+        .center {
+        padding: 0 0.5rem;
+        }
+        .brand {
+        letter-spacing: 0.04em;
+        }
+        .tagline {
+        font-size: clamp(0.55rem, 3vw, 0.75rem);
+        letter-spacing: 0.3em;
+        margin-top: 0.6rem;
+        }
     }
-    .tagline {
-      font-size: clamp(0.55rem, 3vw, 0.75rem);
-      letter-spacing: 0.3em;
-      margin-top: 0.6rem;
-    }
-  }
-</style>
+    </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div class="center">
-  <div class="brand">Etherthink</div>
-  <div class="tagline">Slowly but surely</div>
-</div>
-
-<script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-
-const SYMBOLS = [
-  '∫','∑','π','√','∞','Δ','∇','∂','λ','μ','σ','ω','α','β','γ','θ','φ','ψ','ε','η',
-  'ℏ','ℓ','∈','⊕','⊗','≡','≈','≠','≤','≥','∝','∀','∃',
-  'F=ma','E=mc²','PV=nRT','v=λf','a²+b²=c²','eⁱᵖ+1=0',
-  'ΔS≥0','∇·E=ρ/ε₀','τ=rF','p=mv','KE=½mv²',
-  'H₂O','CO₂','NH₃','NaCl','C₆H₁₂O₆','Fe₂O₃',
-  'sin²+cos²=1','lim','dx','dy','∮',
-  'σ=F/A','Q=mcΔT','η=W/Q','Ĥψ=Eψ','Δx·Δp≥ℏ/2',
-  'R','Ω','Hz','Pa','J/mol','⊻','∧','∨','¬','ℝ','ℤ','ℕ','ℂ',
-];
-
-let W, H, particles = [];
-
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', () => { resize(); init(); });
-
-function rand(a, b) { return a + Math.random() * (b - a); }
-
-class Particle {
-  constructor() {
-    this.sym   = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-    this.x     = rand(20, W - 20);
-    this.y     = rand(20, H - 20);
-    this.vx    = rand(-0.5, 0.5);
-    this.vy    = rand(-0.5, 0.5);
-    this.size  = rand(11, 19);
-    this.hue   = rand(180, 240);
-    this.alpha = rand(0.15, 0.35);
-    this.w     = this.sym.length * this.size * 0.6;
-  }
-
-  update(others) {
-    this.x += this.vx;
-    this.y += this.vy;
-
-    if (this.x < 0)  { this.x = 0;  this.vx *= -1; }
-    if (this.x > W)  { this.x = W;  this.vx *= -1; }
-    if (this.y < 0)  { this.y = 0;  this.vy *= -1; }
-    if (this.y > H)  { this.y = H;  this.vy *= -1; }
-
-    for (const o of others) {
-      if (o === this) continue;
-      const dx = this.x - o.x;
-      const dy = this.y - o.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const minDist = (this.w + o.w) * 0.5;
-      if (dist < minDist && dist > 0) {
-        const nx = dx / dist;
-        const ny = dy / dist;
-        const dvx = this.vx - o.vx;
-        const dvy = this.vy - o.vy;
-        const dot = dvx * nx + dvy * ny;
-        if (dot < 0) {
-          this.vx -= dot * nx;
-          this.vy -= dot * ny;
-          o.vx    += dot * nx;
-          o.vy    += dot * ny;
-          const overlap = (minDist - dist) / 2;
-          this.x += nx * overlap;
-          this.y += ny * overlap;
-          o.x    -= nx * overlap;
-          o.y    -= ny * overlap;
-        }
-      }
+    <canvas id="c"></canvas>
+    <div class="center">
+        <div class="brand">Etherthink</div>
+        <div class="tagline">Slowly but surely</div>
+    </div>
+    <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const SYMBOLS = [
+    '∫','∑','π','√','∞','Δ','∇','∂','λ','μ','σ','ω','α','β','γ','θ','φ','ψ','ε','η',
+    'ℏ','ℓ','∈','⊕','⊗','≡','≈','≠','≤','≥','∝','∀','∃',
+    'F=ma','E=mc²','PV=nRT','v=λf','a²+b²=c²','eⁱᵖ+1=0',
+    'ΔS≥0','∇·E=ρ/ε₀','τ=rF','p=mv','KE=½mv²',
+    'H₂O','CO₂','NH₃','NaCl','C₆H₁₂O₆','Fe₂O₃',
+    'sin²+cos²=1','lim','dx','dy','∮',
+    'σ=F/A','Q=mcΔT','η=W/Q','Ĥψ=Eψ','Δx·Δp≥ℏ/2',
+    'R','Ω','Hz','Pa','J/mol','⊻','∧','∨','¬','ℝ','ℤ','ℕ','ℂ','あ','い','う','え','お','Hallo','こんにちは',
+    ];
+    let W, H, particles = [];
+    function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
     }
-  }
-
-  draw() {
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-    ctx.font        = `${this.size}px 'Inter', monospace`;
-    ctx.fillStyle   = `hsl(${this.hue}, 55%, 70%)`;
-    ctx.fillText(this.sym, this.x, this.y);
-    ctx.restore();
-  }
-}
-
-function init() {
-  particles = [];
-  for (let i = 0; i < 90; i++) particles.push(new Particle());
-}
-
-function loop() {
-  ctx.clearRect(0, 0, W, H);
-  for (const p of particles) p.update(particles);
-  for (const p of particles) p.draw();
-  requestAnimationFrame(loop);
-}
-
-init();
-loop();
-</script>
+    resize();
+    window.addEventListener('resize', () => { resize(); init(); });
+    function rand(a, b) { return a + Math.random() * (b - a); }
+    class Particle {
+    constructor() {
+        this.sym   = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        this.x     = rand(20, W - 20);
+        this.y     = rand(20, H - 20);
+        this.vx    = rand(-0.5, 0.5);
+        this.vy    = rand(-0.5, 0.5);
+        this.size  = rand(11, 19);
+        this.hue   = rand(180, 240);
+        this.alpha = rand(0.15, 0.35);
+        this.w     = this.sym.length * this.size * 0.6;
+    }
+    update(others) {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0)  { this.x = 0;  this.vx *= -1; }
+        if (this.x > W)  { this.x = W;  this.vx *= -1; }
+        if (this.y < 0)  { this.y = 0;  this.vy *= -1; }
+        if (this.y > H)  { this.y = H;  this.vy *= -1; }
+        for (const o of others) {
+        if (o === this) continue;
+        const dx = this.x - o.x;
+        const dy = this.y - o.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = (this.w + o.w) * 0.5;
+        if (dist < minDist && dist > 0) {
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const dvx = this.vx - o.vx;
+            const dvy = this.vy - o.vy;
+            const dot = dvx * nx + dvy * ny;
+            if (dot < 0) {
+            this.vx -= dot * nx;
+            this.vy -= dot * ny;
+            o.vx    += dot * nx;
+            o.vy    += dot * ny;
+            const overlap = (minDist - dist) / 2;
+            this.x += nx * overlap;
+            this.y += ny * overlap;
+            o.x    -= nx * overlap;
+            o.y    -= ny * overlap;
+            }
+        }
+        }
+    }
+    draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.font        = `${this.size}px 'Inter', monospace`;
+        ctx.fillStyle   = `hsl(${this.hue}, 55%, 70%)`;
+        ctx.fillText(this.sym, this.x, this.y);
+        ctx.restore();
+    }
+    }
+    function init() {
+    particles = [];
+    for (let i = 0; i < 90; i++) particles.push(new Particle());
+    }
+    function loop() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) p.update(particles);
+    for (const p of particles) p.draw();
+    requestAnimationFrame(loop);
+    }
+    init();
+    loop();
+    </script>
 </body>
 </html>
